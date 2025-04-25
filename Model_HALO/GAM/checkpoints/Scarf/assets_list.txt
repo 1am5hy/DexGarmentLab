@@ -1,0 +1,3 @@
+Assets/Flatten_Scarf/flatten_scarf_0.4.usd
+Assets/Flatten_Scarf/flatten_scarf_0.35.usd
+Assets/Flatten_Scarf/flatten_scarf_0.375.usd

@@ -1,0 +1,4 @@
+Assets/Garment/Hat/HA_Hat007/HA_Hat007_obj.usd
+Assets/Garment/Hat/HA_Hat013/HA_Hat013_obj.usd
+Assets/Garment/Hat/HA_Hat021/HA_Hat021_obj.usd
+Assets/Garment/Hat/HA_Hat027/HA_Hat027_obj.usd
