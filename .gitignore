@@ -13,3 +13,4 @@ test.py
 Texture_Generate.sh
 Validation.sh
 pipeline.sh
+**.__pycache__
