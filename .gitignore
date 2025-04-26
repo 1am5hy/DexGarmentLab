@@ -6,6 +6,7 @@ Data
 Env_StandAlone/Z_TestEnv.py
 Env_Validation
 Model_HALO/SADP
+Model_HALO/SADP_G
 IL_Baselines
 Tool_Scripts
 test.py
