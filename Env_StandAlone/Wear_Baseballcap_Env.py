@@ -117,7 +117,7 @@ class WearBaseballcap_Env(BaseEnv):
         
         
         # load UniGarmentManip Model
-        self.model = GAM_Encapsulation(catogory="Duck_Hat")   
+        self.model = GAM_Encapsulation(catogory="Baseball_Cap")   
 
         # import Collision Group
         self.collisiongroup=CollisionGroup(
@@ -191,7 +191,7 @@ class WearBaseballcap_Env(BaseEnv):
 
         if self.step_num % 5 == 0:
         
-            joint_pos_L = self.bimanual_dex.dexright.get_joint_positions()
+            joint_pos_L = self.bimanual_dex.dexleft.get_joint_positions()
             
             joint_pos_R = self.bimanual_dex.dexright.get_joint_positions()
             
@@ -391,7 +391,7 @@ if __name__=="__main__":
             pos = np.array([x,y,0.0])
             ori = np.array([90.0, 0.0, 0.0])
             Base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            assets_lists = os.path.join(Base_dir,"Model_HALO/GAM/checkpoints/Duck_Hat/assets_list.txt")
+            assets_lists = os.path.join(Base_dir,"Model_HALO/GAM/checkpoints/Baseball_Cap/assets_list.txt")
             assets_list = []
             with open(assets_lists,"r",encoding='utf-8') as f:
                 for line in f:

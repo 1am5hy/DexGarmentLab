@@ -299,6 +299,26 @@ def StoreTops(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     )
     for i in range(50):
         env.step()
+        
+    # hide prim to get garment point cloud
+    set_prim_visible_group(
+        prim_path_list=["/World/DexLeft", "/World/DexRight", "/World/pusher"],
+        visible=False,
+    )
+    for i in range(50):
+        env.step()
+         
+    env.garment_pcd, color = env.garment_camera.get_point_cloud_data_from_segment(
+        save_or_not=False,
+        save_path=get_unique_filename("data", extension=".ply"),
+    )
+    
+    set_prim_visible_group(
+        prim_path_list=["/World/DexLeft", "/World/DexRight", "/World/pusher"],
+        visible=True,
+    )
+    for i in range(50):
+        env.step()
     
     left_ori=np.array([0.7010574,0.5609855, 0.4304593, 0.092296])
     right_ori=np.array([ 0.4304593, 0.092296, 0.7010574,0.5609855])    
