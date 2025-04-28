@@ -5,6 +5,7 @@ Assets/Scene
 Data
 Env_StandAlone/Z_TestEnv.py
 Env_Validation
+Env_PicGeneration
 Model_HALO/SADP
 Model_HALO/SADP_G
 IL_Baselines
@@ -13,4 +14,6 @@ test.py
 Texture_Generate.sh
 Validation.sh
 pipeline.sh
-**.__pycache__
+visualize_affodance.py
+visualize_corresponce.py
+**/__pycache__/

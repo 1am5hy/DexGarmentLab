@@ -48,11 +48,22 @@ def parse_args_val():
             return False
         else:
             raise argparse.ArgumentTypeError('Boolean value expected.')
+        
+    def str2int(v):
+        try:
+            return int(v)
+        except ValueError:
+            raise argparse.ArgumentTypeError('Integer value expected.')
     
     parser.add_argument("--ground_material_usd", type=str, default=None, help="ground material usd path")
     parser.add_argument("--validation_flag",type=str2bool, default=False, help="validation flag")
     parser.add_argument("--record_vedio_flag",type=str2bool, default=False, help="record vedio flag")
     parser.add_argument("--env_random_flag", type=str2bool, default=False, help="env random flag")
     parser.add_argument("--garment_random_flag", type=str2bool, default=False, help="garemnt random flag")
+    
+    parser.add_argument("--training_data_num", type=str2int, default=100, help="training data number")
+    parser.add_argument("--stage_1_checkpoint_num", type=str2int, default=1500, help="Stage 1 checkpoint number")
+    parser.add_argument("--stage_2_checkpoint_num", type=str2int, default=1500, help="Stage 2 checkpoint number")
+    parser.add_argument("--stage_3_checkpoint_num", type=str2int, default=1500, help="Stage 3 checkpoint number")
     
     return parser.parse_args()

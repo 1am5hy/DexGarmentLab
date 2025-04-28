@@ -26,7 +26,6 @@ Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Suit012/TCLO_Suit012_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_013_/TCLO_013__obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Jacket061/TCLO_Jacket061_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Shirt025/TCLO_Shirt025_obj.usd
-Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Shirt_2/TCLO_Shirt_2_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Shirt033/TCLO_Shirt033_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Jacket081/TCLO_Jacket081_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Suit003/TCLO_Suit003_obj.usd
@@ -44,7 +43,6 @@ Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Jacket049/TCLO_Jacket049_obj.u
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Coat004/TCLO_Coat004_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Jacket123/TCLO_Jacket123_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_jacket013/TCLO_jacket013_obj.usd
-Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Shirt_3/TCLO_Shirt_3_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Jacket127/TCLO_Jacket127_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_Shirt023/TCLO_Shirt023_obj.usd
 Assets/Garment/Tops/Collar_Lsleeve_FrontOpen/TCLO_065/TCLO_065_obj.usd

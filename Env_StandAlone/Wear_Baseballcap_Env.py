@@ -306,18 +306,18 @@ def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, dat
     # get lift points
     left_lift_points = np.array([env.target_put_pos[0]+0.05, manipulation_points[0][1], 1.15])  # set z-axis to 0.65 to make sure dexhand can lift the garment
 
-    # move both dexhand to the lift points
+    # move dexhand to the lift points
     env.bimanual_dex.dexright.dense_step_action(target_pos=left_lift_points, target_ori=np.array([0.5,0.5,0.5,0.5]), angular_type="quat", dense_sample_scale=0.01)
     
     # get lift points
-    left_lift_points = np.array([env.target_put_pos[0]+0.05, env.target_put_pos[1]+hat_length/3.0, 1.15])  # set z-axis to 0.65 to make sure dexhand can lift the garment
+    left_lift_points = np.array([env.target_put_pos[0]+0.05, env.target_put_pos[1]+hat_length/3.0, 1.2])  # set z-axis to 0.65 to make sure dexhand can lift the garment
 
-    # move both dexhand to the lift points
+    # move dexhand to the lift points
     env.bimanual_dex.dexright.dense_step_action(target_pos=left_lift_points, target_ori=np.array([0.5,0.5,0.5,0.5]), angular_type="quat", dense_sample_scale=0.01)
 
     left_lift_points = np.array([env.target_put_pos[0]+0.05, env.target_put_pos[1]+hat_length/3.0, env.target_put_pos[2]-0.3])  # set z-axis to 0.65 to make sure dexhand can lift the garment
 
-    # move both dexhand to the lift points
+    # move dexhand to the lift points
     env.bimanual_dex.dexright.dense_step_action(target_pos=left_lift_points, target_ori=np.array([0.5,0.5,0.5,0.5]), angular_type="quat", dense_sample_scale=0.01)
 
     if data_collection_flag:

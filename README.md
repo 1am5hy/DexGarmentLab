@@ -37,7 +37,7 @@ git clone git@github.com:wayrise/DexGarmentLab.git
 
 **3. Project Assets Download**
 
-DownLoad ***Garment*** directory (necessary assets used in this repo) from [Google Drive Link](https://drive.google.com/drive/folders/1EWH9zYQfBa96Z4JyimvUSBYOyW615JSg) which are provided by [GarmentLab](https://github.com/GarmentLab/GarmentLab), Thanks for GarmentLab's Contribution!
+DownLoad ***Garment*** directory (necessary assets used in this repo) from [Google Drive Link](https://drive.google.com/drive/folders/1EWH9zYQfBa96Z4JyimvUSBYOyW615JSg) which are provided by [GarmentLab](https://github.com/GarmentLab/GarmentLab), Thanks for GarmentLab's contribution!
 
 Download ***Robots*** and ***Scene*** directory from [Google Drive Link](https://drive.google.com/drive/folders/1tMm_z8O1z3M7jRzhEJQQ3xQsi89XiK3e?usp=sharing).
 
@@ -60,7 +60,7 @@ We introduce 15 garment manipulation tasks across 8 categories, encompassing:
 
 - **Garment-Self-Interaction Task**: ```Fling Tops```, ```Fling Dress```, ```Fling Trousers```, ```Fold Tops```, ```Fold Dress```, ```Fold Trousers```. The key variables include **garment position**, **orientation**, and **shape**.
 
-- Garment-Environment-Interaction Task: ```Hang Dress```, ```Hang Tops```, ```Hang Trousers```, ```Hang Coat```, ```Wear Scarf```, ```Wear Bowl Hat```, ```Wear Baseball Cap```, ```Wear Gloves```, ```Store Garment```. The key variables include **garment position**, **garment orientation**, **garment shape** and **environment-interaction assets positions** (e.g., hangers, pothooks, humans, etc.)
+- **Garment-Environment-Interaction Task**: ```Hang Dress```, ```Hang Tops```, ```Hang Trousers```, ```Hang Coat```, ```Wear Scarf```, ```Wear Bowl Hat```, ```Wear Baseball Cap```, ```Wear Gloves```, ```Store Garment```. The key variables include **garment position**, **garment orientation**, **garment shape** and **environment-interaction assets positions** (e.g., hangers, pothooks, humans, etc.)
 
 you can run python files in 'Env_StandAlone' using following commands:
 
