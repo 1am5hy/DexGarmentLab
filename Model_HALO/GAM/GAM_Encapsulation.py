@@ -79,14 +79,14 @@ class GAM_Encapsulation:
         max_values, max_indices = torch.max(result, dim=1)
         cprint(f"similarity score: {max_values}", color="blue")
         cprint(f"relevant indices: {max_indices}", color="blue")
-        
+        cprint(f"similarity result shape: {result.shape}", color="blue")
         # get manipulation points
         manipulation_points = input_pcd[max_indices.detach().cpu().numpy()]
         cprint(f"manipulation points: \n {manipulation_points}", color="blue")
         
         cprint("----------- GAM Inference End -----------", color="blue", attrs=["bold"])
         
-        return manipulation_points, max_indices.detach().cpu().numpy(), max_values.cpu().numpy()
+        return manipulation_points, max_indices.detach().cpu().numpy(), result.cpu().numpy()
     
     def get_colormap_points(self, input_pcd:np.ndarray):
         '''
