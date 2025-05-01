@@ -1,7 +1,17 @@
 <h2 align="center">
   <b><tt>DexGarmentLab</tt>: <br>
-  Dexterous Garment Manipulation Environment with Generalizable Policy</b>
+  Dexterous Garment Manipulation Environment with <br>
+  Generalizable Policy</b>
 </h2>
+
+## 🗺️ Overview
+
+![](Repo_Image/Teaser.jpg)
+
+**DexGarmentLab** includes three major components:
+- **Environment**: We propose <u>Dexterous Garment Manipulation Environment</u> with 15 different task scenes (especially for bimanual coordination) based on 2500+ garments.
+- **Automated Data Collection**: Because of the same structure of category-level garment, category-level generalization is accessible, which empowers our proposed <u>Automated Data Collection Pipeline</u> to handle different position, deformation and shapes of garment with task config (including grasp position and task sequence) and grasp hand pose provided by single expert demonstration.
+- **Generalizable Policy**: With diverse collected demonstration data, we introduce <u> **H**ierarchical g**A**rment manipu**L**ation p**O**licy (**HALO**) </u>, combining affordance points and trajectories to generalize across different attributes in different tasks.
 
 ## 📢 MileStone
 

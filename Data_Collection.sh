@@ -1,23 +1,24 @@
 #!/bin/bash
 
-# 获取参数
+# get parameters
 task_name=$1
 demo_num=$2
-isaac_path=~/isaacsim_4.5.0/python.sh
 
+# export isaac path. [!!] please change to your own path! 
+isaac_path=~/isaacsim_4.5.0/python.sh # changeable
 export ISAAC_PATH=$isaac_path
 
-# 创建目录和文件
+# create target dir and file
 base_dir="Data/${task_name}"
 mkdir -p "${base_dir}/final_state_pic"
 mkdir -p "${base_dir}/train_data"
 mkdir -p "${base_dir}/vedio"
 touch "${base_dir}/data_collection_log.txt"
 
-# 获取当前数据数量
+# get current collected data number
 current_num=$(ls "${base_dir}/train_data" | wc -l)
 
-# 进度条函数（写 stderr）
+# progress bar function
 print_progress() {
     local current=$1
     local total=$2
@@ -30,31 +31,32 @@ print_progress() {
     local bar=$(printf "%0.s█" $(seq 1 $filled))
     bar+=$(printf "%0.s " $(seq 1 $empty))
 
-    # 输出任务名和进度条
+    # output task name and progress bar
     printf "\rTask: %-20s |%s| %3d%% (%d/%d)" "$task" "$bar" "$percent" "$current" "$total" >&2
 }
 
-# 数据采集循环
+# data collection loop
 while [ "$current_num" -lt "$demo_num" ]; do
 
-    # 打印进度条
+    # print progress bar
     print_progress "$current_num" "$demo_num" "$task_name"
 
-    # 执行 isaac 命令（stdout 保留）
+    # execute
     $ISAAC_PATH Env_StandAlone/${task_name}_Env.py \
         --env_random_flag True \
         --garment_random_flag True \
         --data_collection_flag True \
+        --record_vedio_flag True \
         > /dev/null 2>&1
 
-    # 更新数量
+    # update collected data number
     current_num=$(ls "${base_dir}/train_data" | wc -l)
 
     sleep 5
 done
 
-# 打印进度条
+# print final progress bar
 print_progress "$current_num" "$demo_num" "$task_name"
 
-# 完成后换行
+# line break after completion
 echo >&2
