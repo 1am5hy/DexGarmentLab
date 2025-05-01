@@ -35,7 +35,7 @@ from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
 from Env_Config.Room.Object_Tools import hanger_load, set_prim_visible_group, delete_prim_group
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
 from Model_HALO.GAM.GAM_Encapsulation import GAM_Encapsulation
@@ -115,6 +115,7 @@ class HangTrousers_Env(BaseEnv):
 
         self.garment_pcd = None
         self.object_pcd = None
+        self.points_affordance_feature = None
         
         # load GAM Model
         self.model = GAM_Encapsulation(catogory="Trousers")        
@@ -216,6 +217,7 @@ class HangTrousers_Env(BaseEnv):
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
                 "object_point_cloud":self.object_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -275,11 +277,13 @@ def HangTrousers(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_c
         env.thread_record.start()
 
     # get manipulation points from GAM Model
-    manipulation_points, indices, max_values = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[1083,219])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[1083,219])
     
     if abs(manipulation_points[0][0]-manipulation_points[1][0])<0.05:
         print("model false")
         simulation_app.close()
+        
+    env.points_affordance_feature = normalize_columns(points_similarity.T)
         
     # get lift height
     y_min = env.garment_pcd[np.argmin(env.garment_pcd[:, 1])]
@@ -345,15 +349,7 @@ def HangTrousers(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_c
     )
     for i in range(50):
         env.step()
-        
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Hang_Trousers/vedio"):
-            os.makedirs("Data/Hang_Trousers/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Hang_Trousers/vedio/vedio", ".mp4"))
-   
-        
-        
+  
     success=True
     
     pcd_judge, _ = env.judge_camera.get_point_cloud_data_from_segment(
@@ -376,6 +372,12 @@ def HangTrousers(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_c
     cprint(f"hanger_center_x: {env.hanger_center[0]}", "blue")
     cprint("----------- Judge End -----------", "blue", attrs=["bold"])
     cprint(f"final result: {success}", color="green", on_color="on_green")
+    
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Hang_Trousers/vedio"):
+            os.makedirs("Data/Hang_Trousers/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Hang_Trousers/vedio/vedio", ".mp4"))
 
     if data_collection_flag:
         # write into .log file

@@ -33,7 +33,7 @@ from Env_Config.Garment.Deformable_Garment import Deformable_Garment
 from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Position_Judge import judge_pcd
 from Env_Config.Room.Object_Tools import set_prim_visible_group, delete_prim_group
@@ -99,6 +99,7 @@ class FoldDress_Env(BaseEnv):
         )
         
         self.garment_pcd = None
+        self.points_affordance_feature = None
         
         # load GAM Model
         self.model = GAM_Encapsulation(catogory="Dress_LongSleeve")        
@@ -166,6 +167,7 @@ class FoldDress_Env(BaseEnv):
                 "image": rgb,
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -200,12 +202,14 @@ def FoldDress(pos, ori, usd_path, ground_material_usd, data_collection_flag, rec
     for i in range(50):
         env.step()
 
-    manipulation_points, indices, max_values = env.model.get_manipulation_points(input_pcd=pcd, index_list=[939, 1102, 257, 1488, 850, 1428])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=pcd, index_list=[939, 1102, 257, 1488, 850, 1428])
 
     manipulation_points[0:4, 2] = 0.02
     manipulation_points[4:, 2] = 0.0
     
     # ---------------------- left hand ---------------------- #
+    
+    env.points_affordance_feature = normalize_columns(np.concatenate([points_similarity[0:1], points_similarity[0:1]], axis=0).T)
         
     env.bimanual_dex.dexleft.dense_step_action(target_pos=manipulation_points[0], target_ori=np.array([0.579, -0.579, -0.406, 0.406]), angular_type="quat")
     
@@ -244,6 +248,8 @@ def FoldDress(pos, ori, usd_path, ground_material_usd, data_collection_flag, rec
 
     
     # --------------------- right hand --------------------- #
+    
+    env.points_affordance_feature = normalize_columns(np.concatenate([points_similarity[2:3], points_similarity[2:3]], axis=0).T)
             
     env.bimanual_dex.dexright.dense_step_action(target_pos=manipulation_points[2], target_ori=np.array([0.406, -0.406, -0.579, 0.579]), angular_type="quat")
 
@@ -280,7 +286,9 @@ def FoldDress(pos, ori, usd_path, ground_material_usd, data_collection_flag, rec
     
     env.bimanual_dex.dexright.dense_step_action(target_pos=np.array([0.6, 0.8, 0.5]), target_ori=np.array([0.406, -0.406, -0.579, 0.579]), angular_type="quat")
     
-    # --------------------- bottom-top --------------------- #     
+    # --------------------- bottom-top --------------------- #   
+    
+    env.points_affordance_feature = normalize_columns(points_similarity[4:6].T)
    
     env.bimanual_dex.dense_move_both_ik(
         left_pos=manipulation_points[4], 
@@ -336,14 +344,7 @@ def FoldDress(pos, ori, usd_path, ground_material_usd, data_collection_flag, rec
     set_prim_visibility(dexright_prim, False)
     
     for i in range(50):
-        env.step()
-
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Fold_Dress/vedio"):
-            os.makedirs("Data/Fold_Dress/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Fold_Dress/vedio/vedio", ".mp4"))
-   
+        env.step()   
         
     success=True
     points,*_=env.model.get_manipulation_points(pcd,[279,1011,2035])
@@ -355,8 +356,13 @@ def FoldDress(pos, ori, usd_path, ground_material_usd, data_collection_flag, rec
     )
     success=judge_pcd(pcd_end,boundary,threshold=0.15)
     cprint(f"final result: {success}", color="green", on_color="on_green")
-
     
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Fold_Dress/vedio"):
+            os.makedirs("Data/Fold_Dress/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Fold_Dress/vedio/vedio", ".mp4"))
+
     if data_collection_flag:
         # write into .log file
         with open("Data/Fold_Dress/data_collection_log.txt", "a") as f:

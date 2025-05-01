@@ -33,7 +33,7 @@ from Env_Config.Garment.Deformable_Garment import Deformable_Garment
 from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Position_Judge import judge_pcd
 from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
@@ -102,6 +102,7 @@ class FoldTrousers_Env(BaseEnv):
         )
         
         self.garment_pcd = None
+        self.points_affordance_feature = None
         
         # load GAM Model
         self.model = GAM_Encapsulation(catogory="Trousers")        
@@ -169,6 +170,7 @@ class FoldTrousers_Env(BaseEnv):
                 "image": rgb,
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -205,7 +207,7 @@ def FoldTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag, 
     
     pcd_rotate = rotate_point_cloud(pcd, euler_angles=np.array([0, 0, -90]), center_point=env.garment.get_garment_center_pos())     
     # get manipulation points from GAM Model
-    manipulation_points, indices, point_features = env.model.get_manipulation_points(input_pcd=pcd_rotate, index_list=[983, 521, 1801, 471, 1170, 214])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=pcd_rotate, index_list=[983, 521, 1801, 471, 1170, 214])
 
     manipulation_points = pcd[indices]
     # print("actual_manipulation_points:\n", manipulation_points)
@@ -213,6 +215,8 @@ def FoldTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag, 
     manipulation_points[:, 2] = 0.0
     
     # ------------------------------- fold procedure 1 ----------------------------------------------
+        
+    env.points_affordance_feature = normalize_columns(points_similarity[0:2].T)
         
     env.bimanual_dex.dense_move_both_ik(
         left_pos=manipulation_points[0], 
@@ -299,6 +303,8 @@ def FoldTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag, 
     
     # ------------------------------- fold procedure 2 ----------------------------------------------
         
+    env.points_affordance_feature = normalize_columns(np.concatenate([points_similarity[4:5], points_similarity[4:5]], axis=0).T)
+        
     # move to catch point
     # env.bimanual_dex.dexright.dense_step_action(
     #     target_pos=np.array([manipulation_points[4][0], manipulation_points[4][1], 0.5]),
@@ -351,14 +357,7 @@ def FoldTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag, 
     set_prim_visibility(dexright_prim, False)
     
     for i in range(50):
-        env.step()
-
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Fold_Trousers/vedio"):
-            os.makedirs("Data/Fold_Trousers/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Fold_Trousers/vedio/vedio", ".mp4"))
-   
+        env.step()   
         
     success=True
     _,indices,x=env.model.get_manipulation_points(pcd_rotate,[216,471,1288])
@@ -371,8 +370,13 @@ def FoldTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag, 
     )
     success=judge_pcd(pcd_end,boundary,threshold=0.15)
     cprint(f"final result: {success}", color="green", on_color="on_green")
-
     
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Fold_Trousers/vedio"):
+            os.makedirs("Data/Fold_Trousers/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Fold_Trousers/vedio/vedio", ".mp4"))
+
     if data_collection_flag:
         # write into .log file
         with open("Data/Fold_Trousers/data_collection_log.txt", "a") as f:

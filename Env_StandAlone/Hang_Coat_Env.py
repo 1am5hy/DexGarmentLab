@@ -1,5 +1,5 @@
 from isaacsim import SimulationApp
-simulation_app = SimulationApp({"headless": False})
+simulation_app = SimulationApp({"headless": True})
 
 # load external package
 import os
@@ -35,7 +35,7 @@ from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
 from Env_Config.Room.Object_Tools import pothook_load, set_prim_visible_group, delete_prim_group
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns, plot_column_distributions
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
 from Model_HALO.GAM.GAM_Encapsulation import GAM_Encapsulation
@@ -113,6 +113,7 @@ class HangCoat_Env(BaseEnv):
         
         self.garment_pcd = None
         self.object_pcd = None
+        self.points_affordance_feature = None
         
         # load GAM Model
         self.model = GAM_Encapsulation(catogory="Tops_FrontOpen")   
@@ -198,8 +199,9 @@ class HangCoat_Env(BaseEnv):
                 "joint_state": joint_state,
                 "image": rgb,
                 "env_point_cloud": point_cloud,
-                "garment_point_cloud":self.garment_pcd,
-                "object_point_cloud":self.object_pcd,
+                "garment_point_cloud": self.garment_pcd,
+                "object_point_cloud": self.object_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -208,7 +210,7 @@ def HangCoat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_colle
     
     env = HangCoat_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, record_vedio_flag)
     
-    env.garment.particle_material.set_gravity_scale(0.45)
+    env.garment.particle_material.set_gravity_scale(0.7)
     
     # hide prim to get garment point cloud
     set_prim_visible_group(
@@ -255,9 +257,11 @@ def HangCoat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_colle
     
     pcd_rotate = rotate_point_cloud(pcd, euler_angles=np.array([0, 0, 180]), center_point=env.garment.get_garment_center_pos())     
 
-    manipulation_points, indices, point_features = env.model.get_manipulation_points(input_pcd=pcd_rotate, index_list=[793, 1805])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=pcd_rotate, index_list=[793, 1805])
     manipulation_points=pcd[indices]
     manipulation_points[:, 2] = 0.0
+    
+    env.points_affordance_feature = normalize_columns(points_similarity.T)    
     
     garment_boundary_points, boundary_indices, _ = env.model.get_manipulation_points(input_pcd=pcd_rotate, index_list=[561, 1776])
     garment_boundary_points = pcd[boundary_indices]
@@ -303,12 +307,12 @@ def HangCoat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_colle
     if data_collection_flag:
        env.stop_record()
 
-    env.garment.particle_material.set_gravity_scale(1.5)
+    env.garment.particle_material.set_gravity_scale(2.0)
     
     for i in range(100):
         env.step()
         
-    env.garment.particle_material.set_gravity_scale(0.45)   
+    env.garment.particle_material.set_gravity_scale(0.7)   
         
     # make prim visible
     set_prim_visible_group(
@@ -318,12 +322,6 @@ def HangCoat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_colle
     for i in range(50):
         env.step()
         
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Hang_Coat/vedio"):
-            os.makedirs("Data/Hang_Coat/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Hang_Coat/vedio/vedio", ".mp4"))
-        
     success=True
     
     cprint("[INFO]----------- Judge Begin -----------", "blue", attrs=["bold"])
@@ -332,12 +330,17 @@ def HangCoat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_colle
     success=env.garment.get_garment_center_pos()[2]>0.50 and env.garment.get_garment_center_pos()[2]<2.0
     cprint(f"[INFO]final result: {success}", color="green", on_color="on_green")
     
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Hang_Coat/vedio"):
+            os.makedirs("Data/Hang_Coat/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Hang_Coat/vedio/vedio", ".mp4"))
+    
     if data_collection_flag:
         # write into .log file
         with open("Data/Hang_Coat/data_collection_log.txt", "a") as f:
             f.write(f"result:{success}  usd_path:{env.garment.usd_path}  pos_x:{pos[0]}  pos_y:{pos[1]}  env_dx:{env_dx}  env_dy:{env_dy} \n")
         
-    
     if data_collection_flag and success:
         env.record_to_npz(env_change=True)
         if not os.path.exists("Data/Hang_Coat/final_state_pic"):

@@ -35,9 +35,9 @@ from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
 from Env_Config.Room.Object_Tools import hat_helper_load, set_prim_visible_group, delete_prim_group
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
-from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
+from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud,compute_similarity
 from Model_HALO.GAM.GAM_Encapsulation import GAM_Encapsulation
 from Env_Config.Utils_Project.Collision_Group import CollisionGroup
 from Env_Config.Human.Human import Human
@@ -133,6 +133,7 @@ class WearBowlhat_Env(BaseEnv):
 
         self.garment_pcd = None
         self.object_pcd = None
+        self.points_affordance_feature = None
 
         # ------------------------------------ #
         # --- Initialize World to be Ready --- #
@@ -206,6 +207,7 @@ class WearBowlhat_Env(BaseEnv):
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
                 "object_point_cloud":self.object_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -273,9 +275,13 @@ def WearBowlhat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_co
         cprint("error!", "red", "on_red")
         simulation_app.close()
         
+    left_similarity = compute_similarity(env.garment_pcd, point_x_min, sigma=0.05)
+    right_similarity = compute_similarity(env.garment_pcd, point_x_max, sigma=0.05)
+    
+    env.points_affordance_feature = normalize_columns(np.concatenate([left_similarity, right_similarity], axis=1))
+        
     hat_length = np.max(env.garment_pcd[:, 1]) - np.min(env.garment_pcd[:, 1])
     
-        
     left_lift_points = np.array([point_x_min[0]-0.05, point_x_min[1], 0.4])
     right_lift_points = np.array([point_x_max[0]+0.05, point_x_max[1], 0.4])
 
@@ -331,13 +337,6 @@ def WearBowlhat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_co
         
     for i in range(50):
         env.step()
-        
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Wear_Bowlhat/vedio"):
-            os.makedirs("Data/Wear_Bowlhat/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Bowlhat/vedio/vedio", ".mp4"))
-
     
     success=True
     # judge successful or not
@@ -355,6 +354,12 @@ def WearBowlhat(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_co
     cprint(f"distance between garment and head: {distance}", "blue")
     cprint("----------- Judge End -----------", "blue", attrs=["bold"])
     cprint(f"final result: {success}", color="green", on_color="on_green")
+    
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Wear_Bowlhat/vedio"):
+            os.makedirs("Data/Wear_Bowlhat/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Bowlhat/vedio/vedio", ".mp4"))
 
 
     if data_collection_flag:

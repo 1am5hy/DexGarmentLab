@@ -35,7 +35,7 @@ from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
 from Env_Config.Room.Object_Tools import hat_helper_load, set_prim_visible_group, delete_prim_group
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
 from Model_HALO.GAM.GAM_Encapsulation import GAM_Encapsulation
@@ -184,6 +184,7 @@ class WearScarf_Env(BaseEnv):
 
         self.garment_pcd = None
         self.object_pcd = None
+        self.points_affordance_feature = None
         
         # ------------------------------------ #
         # --- Initialize World to be Ready --- #
@@ -271,6 +272,7 @@ class WearScarf_Env(BaseEnv):
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
                 "object_point_cloud":self.object_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -323,9 +325,9 @@ def WearScarf(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     if record_vedio_flag:
         env.thread_record.start()
     
-    # manipulation_points, indices, max_values = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[205, 908])
-    manipulation_points, indices, max_values = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[205, 1600])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[205, 1600])
     
+    env.points_affordance_feature = normalize_columns(points_similarity.T)
     
     manipulation_points[:, 2] = -0.02
     manipulation_points[:, 1] -= 0.05
@@ -435,12 +437,6 @@ def WearScarf(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     if data_collection_flag:
         env.stop_record()
         
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Wear_Scarf/vedio"):
-            os.makedirs("Data/Wear_Scarf/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Scarf/vedio/vedio", ".mp4"))
-        
     set_prim_visible_group(["/World/DexLeft", "/World/DexRight", "/World/Human"], visible=False)
         
     for i in range(50):
@@ -468,7 +464,12 @@ def WearScarf(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     cprint(f"back_points_below_threshold: {back_points_below_threshold}", "blue")
     cprint("----------- Judge End -----------", "blue", attrs=["bold"])
     cprint(f"final result: {success}", color="green", on_color="on_green")
-       
+    
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Wear_Scarf/vedio"):
+            os.makedirs("Data/Wear_Scarf/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Scarf/vedio/vedio", ".mp4"))
 
     if data_collection_flag:
         # write into .log file

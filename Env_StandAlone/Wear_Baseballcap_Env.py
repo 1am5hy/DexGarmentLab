@@ -35,7 +35,7 @@ from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
 from Env_Config.Room.Object_Tools import hat_helper_load, set_prim_visible_group, delete_prim_group
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
 from Model_HALO.GAM.GAM_Encapsulation import GAM_Encapsulation
@@ -137,6 +137,7 @@ class WearBaseballcap_Env(BaseEnv):
 
         self.garment_pcd = None
         self.object_pcd = None
+        self.points_affordance_feature = None
         
         # ------------------------------------ #
         # --- Initialize World to be Ready --- #
@@ -210,6 +211,7 @@ class WearBaseballcap_Env(BaseEnv):
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
                 "object_point_cloud":self.object_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -269,7 +271,9 @@ def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, dat
         env.thread_record.start()
 
     # get manipulation points from UniGarmentManip Model
-    manipulation_points, indices, point_features = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[1110])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[1110])
+    
+    env.points_affordance_feature = normalize_columns(np.concatenate([points_similarity, points_similarity], axis=0).T)
     
     hat_length = np.max(env.garment_pcd[:, 1]) - np.min(env.garment_pcd[:, 1])  
 
@@ -333,12 +337,6 @@ def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, dat
     for i in range(50):
         env.step()
 
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Wear_Baseballcap/vedio"):
-            os.makedirs("Data/Wear_Baseballcap/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Baseballcap/vedio/vedio", ".mp4"))
-
     success=True
     cur_pos=env.garment.get_garment_center_pos()
     print(cur_pos)
@@ -354,6 +352,12 @@ def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, dat
     cprint(f"distance between garment and head: {distance}", "blue")
     cprint("----------- Judge End -----------", "blue", attrs=["bold"])
     cprint(f"final result: {success}", color="green", on_color="on_green")
+    
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Wear_Baseballcap/vedio"):
+            os.makedirs("Data/Wear_Baseballcap/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Baseballcap/vedio/vedio", ".mp4"))
 
 
     if data_collection_flag:

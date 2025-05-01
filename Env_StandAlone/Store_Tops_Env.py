@@ -35,7 +35,7 @@ from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
 from Env_Config.Room.Object_Tools import pusher_loader, set_prim_visible_group, delete_prim_group
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Collision_Group import CollisionGroup
 from Env_Config.Utils_Project.Point_Cloud_Manip import rotate_point_cloud
@@ -125,7 +125,8 @@ class StoreTops_Env(BaseEnv):
         )
 
         self.garment_pcd = None
-        self.object_pcd = None         
+        self.object_pcd = None     
+        self.points_affordance_feature = None    
         
         # ------------------------------------ #
         # --- Initialize World to be Ready --- #
@@ -205,6 +206,7 @@ class StoreTops_Env(BaseEnv):
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
                 "object_point_cloud":self.object_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -237,8 +239,10 @@ def StoreTops(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     if record_vedio_flag:
         env.thread_record.start()
             
-    manipulation_points, indices, point_features = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[1954, 1832, 528, 587]) 
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=env.garment_pcd, index_list=[1954, 1832, 528, 587]) 
     manipulation_points[:, 2] = 0.025  # set z-axis to 0.005 to make sure dexhand can grasp the garment
+    
+    env.points_affordance_feature = normalize_columns(points_similarity[2:4].T)
     
     # move both dexhand to the manipulation points
     env.bimanual_dex.dense_move_both_ik(left_pos=manipulation_points[0], left_ori=np.array([0.579, -0.579, -0.406, 0.406]), right_pos=manipulation_points[1], right_ori=np.array([0.406, -0.406, -0.579, 0.579]))
@@ -390,12 +394,6 @@ def StoreTops(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
 
     if data_collection_flag:
         env.stop_record()
-        
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Store_Tops/vedio"):
-            os.makedirs("Data/Store_Tops/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Store_Tops/vedio/vedio", ".mp4"))
     
     delete_prim("/World/DexLeft")
     delete_prim("/World/DexRight")    
@@ -426,6 +424,12 @@ def StoreTops(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     cprint(f"distance: {distance}", "blue")
     cprint("----------- Judge End -----------", "blue", attrs=["bold"])
     cprint(f"final result: {success}", color="green", on_color="on_green")
+    
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Store_Tops/vedio"):
+            os.makedirs("Data/Store_Tops/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Store_Tops/vedio/vedio", ".mp4"))
 
     if data_collection_flag:
         # write into .log file

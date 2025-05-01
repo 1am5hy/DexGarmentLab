@@ -33,7 +33,7 @@ from Env_Config.Garment.Deformable_Garment import Deformable_Garment
 from Env_Config.Robot.BimanualDex_Ur10e import Bimanual_Ur10e
 from Env_Config.Camera.Recording_Camera import Recording_Camera
 from Env_Config.Room.Real_Ground import Real_Ground
-from Env_Config.Utils_Project.Code_Tools import get_unique_filename
+from Env_Config.Utils_Project.Code_Tools import get_unique_filename, normalize_columns
 from Env_Config.Utils_Project.Parse import parse_args_record
 from Env_Config.Utils_Project.Flatten_Judge import judge_fling
 from Env_Config.Room.Object_Tools import set_prim_visible_group, delete_prim_group
@@ -91,6 +91,7 @@ class FlingTrousers_Env(BaseEnv):
             prim_path="/World/judge_camera",
         )
         self.garment_pcd = None
+        self.points_affordance_feature = None
     
         # load bimanual_dex
         self.bimanual_dex = Bimanual_Ur10e(
@@ -187,6 +188,7 @@ class FlingTrousers_Env(BaseEnv):
                 "image": rgb,
                 "env_point_cloud": point_cloud,
                 "garment_point_cloud":self.garment_pcd,
+                "points_affordance_feature": self.points_affordance_feature,
             })
         
         self.step_num += 1
@@ -226,7 +228,9 @@ def FlingTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag,
         env.step()
 
     # get manipulation points from GAM Model
-    manipulation_points, indices, max_values = env.model.get_manipulation_points(input_pcd=pcd, index_list=[597, 899])
+    manipulation_points, indices, points_similarity = env.model.get_manipulation_points(input_pcd=pcd, index_list=[597, 899])
+
+    env.points_affordance_feature = normalize_columns(points_similarity.T)
 
     manipulation_points[:, 2] -= 0.02
     
@@ -274,17 +278,17 @@ def FlingTrousers(pos, ori, usd_path, ground_material_usd, data_collection_flag,
     
     for i in range(50):
         env.step()
-
-    # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Fling_Trousers/vedio"):
-            os.makedirs("Data/Fling_Trousers/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Fling_Trousers/vedio/vedio", ".mp4"))
         
     success=True
     image_end = env.garment_camera.get_rgb_graph()
     success=judge_fling(image_judge,image_end,threshold=0.2)
     cprint(f"final result: {success}", color="green", on_color="on_green")
+    
+    # if you wanna create gif, use this code. Need Cooperation with thread.
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Fling_Trousers/vedio"):
+            os.makedirs("Data/Fling_Trousers/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Fling_Trousers/vedio/vedio", ".mp4"))
 
     if data_collection_flag:
         # write into .log file
