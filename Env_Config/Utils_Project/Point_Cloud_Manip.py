@@ -220,3 +220,27 @@ def visualize_pointcloud_with_colors(points, colors, save_or_not=False, save_pat
 
     if save_or_not:
         o3d.io.write_point_cloud(save_path, point_cloud)
+        
+def compute_similarity(pc, point, sigma=0.1):
+    """
+    Compute similarity between each point in a point cloud and a reference point,
+    using a Gaussian decay function based on Euclidean distance.
+
+    Args:
+        pc: np.ndarray, shape (N, 3) - Point cloud coordinates
+        point: np.ndarray, shape (3,) - Reference point coordinates
+        sigma: float - Standard deviation of the Gaussian kernel, controls decay rate
+
+    Returns:
+        similarity: np.ndarray, shape (N, 1) - Similarity value for each point
+    """
+    # Compute Euclidean distances
+    dist = np.linalg.norm(pc - point, axis=1)  # shape: (N,)
+    
+    # Compute similarity using Gaussian decay
+    similarity = np.exp(- (dist ** 2) / (2 * sigma ** 2))  # shape: (N,)
+    
+    # Reshape to column vector (N, 1)
+    similarity = similarity.reshape(-1, 1)
+    
+    return similarity
