@@ -4,8 +4,6 @@
   Generalizable Policy</b>
 </h2>
 
-## 🗺️ Overview
-
 ![](Repo_Image/Teaser.jpg)
 
 **DexGarmentLab** includes three major components:
