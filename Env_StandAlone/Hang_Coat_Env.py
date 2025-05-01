@@ -1,5 +1,5 @@
 from isaacsim import SimulationApp
-simulation_app = SimulationApp({"headless": True})
+simulation_app = SimulationApp({"headless": False})
 
 # load external package
 import os
