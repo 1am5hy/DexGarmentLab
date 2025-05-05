@@ -438,6 +438,8 @@ def WearScarf(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
         env.stop_record()
         
     set_prim_visible_group(["/World/DexLeft", "/World/DexRight", "/World/Human"], visible=False)
+    
+    delete_prim_group(["/World/DexLeft", "/World/DexRight",])
         
     for i in range(50):
         env.step()
