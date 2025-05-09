@@ -4,6 +4,23 @@
   Generalizable Policy</b>
 </h2>
 
+<div align="center" margin-bottom="6em">
+<b>Under Review</b>
+</div>
+
+<br>
+
+<div align="center">
+    <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
+    <img src="https://img.shields.io/badge/Paper-arXiv-green" alt="Paper arXiv"></a>
+    <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
+    <img src="https://img.shields.io/badge/Page-GarmentPile-red" alt="Project Page"/></a>
+    <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
+    <img src="https://img.shields.io/badge/Code-Github-blue" alt="Github Code"/></a>
+</div>
+
+<br>
+
 ![](Repo_Image/Teaser.jpg)
 
 **DexGarmentLab** includes three major components:
@@ -17,11 +34,13 @@
 
 - [x] *(2025.04.25)* DexGarmentLab **Automated Data Collection Pipeline** Release ! 
 
+- [x] *(2025.05.09)* DexGarmentLab **Baselines and Generalizable Policy**
+
+- [x] *(2025.05.09)* DexGarmentLab **Policy Validation Environment**
+
 - [ ] DexGarmentLab **Dataset of Garment Manipulation Tasks** Coming Soon ... 
 
-- [ ] DexGarmentLab **Baselines and Generalizable Policy** Coming Soon ...
 
-- [ ] DexGarmentLab **Policy Validation Environment** Coming Soon ...
 
 ## 📖 Usage
 
@@ -68,7 +87,7 @@ We introduce 15 garment manipulation tasks across 8 categories, encompassing:
 
 - **Garment-Self-Interaction Task**: ```Fling Tops```, ```Fling Dress```, ```Fling Trousers```, ```Fold Tops```, ```Fold Dress```, ```Fold Trousers```. The key variables include **garment position**, **orientation**, and **shape**.
 
-- **Garment-Environment-Interaction Task**: ```Hang Dress```, ```Hang Tops```, ```Hang Trousers```, ```Hang Coat```, ```Wear Scarf```, ```Wear Bowl Hat```, ```Wear Baseball Cap```, ```Wear Gloves```, ```Store Garment```. The key variables include **garment position**, **garment orientation**, **garment shape** and **environment-interaction assets positions** (e.g., hangers, pothooks, humans, etc.)
+- **Garment-Environment-Interaction Task**: ```Hang Dress```, ```Hang Tops```, ```Hang Trousers```, ```Hang Coat```, ```Wear Scarf```, ```Wear Bowl Hat```, ```Wear Baseball Cap```, ```Wear Glove```, ```Store Tops```. The key variables include **garment position**, **garment orientation**, **garment shape** and **environment-interaction assets positions** (e.g., hangers, pothooks, humans, etc.)
 
 you can run python files in 'Env_StandAlone' using following commands:
 
@@ -111,115 +130,261 @@ bash Data_Collection.sh Hang_Coat 10
 # - data_collection_log.txt: recording data collection result,  corresponding assets and task configurations.
 ```
 
-## Coming Soon ...
+You can also download our prepared data from [huggingface]() and put them into **Data** folder.
 
 
+## 🚀 Generalizable Policy
 
-<!-- ## IL_BASELINES
+Our policy **HALO** consists: 
+- **Garment Affordance Model (GAM)**, which is used to generate target manipulation points for robot's movement. The corrsponding affordance map will also be used as denosing condition for SADP.
+- **Structure-Aware Diffusion Policy (SADP)**, which is used to generate robot's subsequent movement aware of garment's structure after moving to the target manipulation points.
 
-Here support two IL baselines: **Diffusion Policy**, **Diffusion Policy 3D**.
+They can be found all in **'Model_HALO/'** directory.
+
+### GAM
+
+The file structure of GAM is as follows:
+
+```
+GAM/
+├── checkpoints/    # checkpoints of trained GAM for different category garment
+    ├──Tops_LongSleeve/     # garment category
+        ├──assets_list.txt           # list of assets used for validation
+        ├──assets_training_list.txt  # list of assets used for training
+        ├──checkpoint.pth            # trained model
+        ├──demo_garment.ply          # demo garment point cloud
+    ......
+    ├──Trousers/
+├── model                   # meta files of GAM
+├── GAM_Encapsulation.py    # encapsulation of GAM
+```
+
+For the detailed use of GAM, please refer to [GAM_Usage](https://github.com/wayrise/DexGarmentLab/blob/main/GAM_Usage.md). The files in **'Env_StandAlone/'** also provide example of how to use GAM.
+
+### SADP
+
+SADP is suitable for **Garment-Environment-Interaction tasks**. All the related tasks only have one stage.
+
+1. **Installation**
+```bash
+cd Model_HALO/SADP
+
+isaac -m pip install -e .
+```
+
+2. **Data Preparation**
+
+We need to pre-process *.npz* data collected in **'Data/'** to *.zarr* data for training. 
+
+The only thing you need to do is just runing '*data2zarr_sadp.sh*' in 'Model_HALO/SADP'.
+
+```bash
+cd Model_HALO/SADP
+
+# usage template: 
+# bash data2zarr_sadp.sh <task_name> <stage_index> <train_data_num>
+bash data2zarr_sadp.sh Hang_Coat 1 100
+
+# Detailed parameters information can be found in the 'data2zarr_sadp.sh' file
+```
+
+The processed data will be saved in 'Model_HALO/SADP/data'. If you wanna train SADP in your headless service, please move the data to the same position.
+
+3. **Training**
+
+```bash
+cd Model_HALO/SADP
+
+# usage template: 
+# python train.py <task_name> <expert_data_num> <seed> <gpu_id> <DEBUG_flag>
+bash train.sh Hang_Coat_stage_1 100 42 0 False
+
+# Detailed parameters information can be found in the 'train.sh' file
+# Before training, we recommend you to set DEBUG_flag to True to check the training process.
+```
+
+The checkpoints will be saved in 'Model_HALO/SADP/checkpoints'.
+
+### SADP_G
+
+SADP_G is suitable for **Garment-Self-Interaction tasks**, which means the denosing conditions exclude interaction-object point cloud. **Fold_Tops** and **Fold_Dress** have three stages. **Fold_Trousers**, **Fling_Dress**, **Fling_Tops** have two stages. **Fling_Trousers** only have one stage.
+
+All the procedure are the same as SADP.
+
+1. **Installation**
+```bash
+cd Model_HALO/SADP_G
+
+isaac -m pip install -e .
+```
+
+2. **Data Preparation**
+```bash
+cd Model_HALO/SADP
+
+# usage template: 
+# bash data2zarr_sadp_g.sh <task_name> <stage_index> <train_data_num>
+bash data2zarr_sadp_g.sh Fold_Tops 2 100
+
+# Detailed parameters information can be found in the 'data2zarr_sadp_g.sh' file
+```
+
+3. **Training**
+
+```bash
+cd Model_HALO/SADP_G
+
+# usage template: 
+# python train.py <task_name> <expert_data_num> <seed> <gpu_id> <DEBUG_flag>
+bash train.sh Fold_Tops_stage_2 100 42 0 False
+
+# Detailed parameters information can be found in the 'train.sh' file
+# Before training, we recommend you to set DEBUG_flag to True to check the training process.
+```
+
+## 🎯 IL_BASELINES
+
+Here support two IL baselines: **Diffusion Policy**, **Diffusion Policy 3D**. Their usages are the same as SADP.
 
 ### Diffusion Policy
 
 1. Installation
 
-    ```bash
-    cd IL_Baselines/Diffusion_Policy
+```bash
+cd IL_Baselines/Diffusion_Policy
 
-    omni_isaac -m pip install -e .
-    ```
+isaac -m pip install -e .
+```
 
 2. Data Preparation
 
-    We need to pre-process *.npz* data collected in Env_Replay to *.zarr* data for training. 
-    
-    The only things you need to do is just runing '*data2zarr_dp.sh*' in 'IL_Baselines/Diffusion_Policy'.
+```bash
 
-    ```bash
-    # detailed information has been added in the script
-    # Here list one example
+cd IL_Baselines/Diffusion_Policy
 
-    cd IL_Baselines/Diffusion_Policy
-
-    bash data2zarr_dp.sh Hang_Tops 1 100
-    ```
-
-    The processed data will be saved in 'IL_Baselines/Diffusion_Policy/data'. If you wanna train IL in your headless service, please move the data to the same position.
+bash data2zarr_dp.sh Hang_Tops 1 100
+```
 
 3. Train
 
-    ```bash
-    # detailed information has been added in the script
-    # Here list one example
+```bash
 
-    cd IL_Baselines/Diffusion_Policy
+cd IL_Baselines/Diffusion_Policy
 
-    bash train.sh Hang_Tops_stage_1 100 42 0 False
-    ```
-
-4. Config_Customization
-
-    you can change some configuration about dp training in 'IL_Baselines/Diffusion_Policy/diffusion_policy/config'.
-
+bash train.sh Hang_Tops_stage_1 100 42 0 False
+```
 
 ### Diffusion Policy 3D
 
-1. Install
+1. Installation
 
-    ```bash
-    cd IL_Baselines/Diffusion_Policy_3D
+```bash
+cd IL_Baselines/Diffusion_Policy_3D
 
-    omni_isaac -m pip install -e .
-    ```
+isaac -m pip install -e .
+```
 
 2. Data Preparation
 
-    We need to pre-process *.npz* data collected in Env_Replay to *.zarr* data for training. 
-    
-    The only things you need to do is just runing '*data2zarr_dp3.sh*' in 'IL_Baselines/Diffusion_Policy_3D'.
-
-    ```bash
-    # detailed information has been added in the script
-    # Here list one example
-
-    cd IL_Baselines/Diffusion_Policy_3D
-
-    bash data2zarr_dp3.sh Hang_Tops 1 100
-    ```
-
-    The processed data will be saved in 'IL_Baselines/Diffusion_Policy_3D/data'. If you wanna train IL in your headless service, please move the data to the same position.
-
-3. Train
-
-    ```bash
-    # detailed information has been added in the script
-    # Here list one example
-
-    cd IL_Baselines/Diffusion_Policy_3D
-
-    bash train.sh Hang_Tops_stage_1 100 42 0 False
-    ```
-
-4. Config_Customization
-
-    you can change some configuration about dp training in 'IL_Baselines/Diffusion_Policy_3D/diffusion_policy_3d/config'.
-
-
-## GIF -> Video
-
-Install FFMPEG first.
 ```bash
-sudo apt update
-sudo apt-get install ffmpeg
-```
-Then you can convert the gif to mp4 by the following command.
-```bash
-ffmpeg -i input.gif(need change) -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2,setpts=PTS/2" output.mp4(need change)
+cd IL_Baselines/Diffusion_Policy_3D
+
+bash data2zarr_dp3.sh Hang_Dress 1 100
 ```
 
-you can also use 'gif2mp4.sh' to convert the gif to mp4. Detailed information has been added in the script. Here list one example.
+3. Training
+
 ```bash
-bash Scripts/gif2mp4.sh FoldTrousers 0
+cd IL_Baselines/Diffusion_Policy_3D
+
+bash train.sh Hang_Dress_stage_1 100 42 0 False
 ```
 
- -->
+## 🪄 Policy Validation
+
+We provide HALO Validation file for all the tasks in 'Env_Validation/' folder. We provide 'Validation.sh' to validate the policy for different tasks.
+
+```bash
+# usage template:
+# bash Validation.sh <task_name> <validation_num> <training_data_num>
+bash Validation.sh Hang_Coat 100 100
+
+# Detailed parameters information can be found in the 'Validation.sh' file
+```
+
+You can find how to load checkpoints and validate the policy through the code and we summarize core code below.
+
+1. SADP
+```python
+# load package
+from Model_HALO.SADP.SADP import SADP
+
+# load model
+sadp = SADP(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
+
+# input organization
+obs = dict()
+obs['agent_pos']=XXX
+obs['environment_point_cloud']=XXX
+obs['garment_point_cloud']=XXX
+obs['object_point_cloud']=XXX
+obs['points_affordance_feature']=XXX
+
+# get action or update obs
+action=sadp.get_action(obs) # or sadp.update_obs(obs)
+```
+
+2. SADP_G
+```python
+# load package
+from Model_HALO.SADP_G.SADP_G import SADP_G
+
+# load model
+sadp_g = SADP_G(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
+
+# input organization
+obs = dict()
+obs['agent_pos']=XXX
+obs['environment_point_cloud']=XXX
+obs['garment_point_cloud']=XXX
+obs['points_affordance_feature']=XXX
+
+# get action or update obs
+action=sadp_g.get_action(obs) # or sadp_g.update_obs(obs)
+```
+
+3. DP3
+```python
+# load package
+from IL_Baselines.Diffusion_Policy_3D.DP3 import DP3
+
+# load model
+dp3 = DP3(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
+
+# input organization
+obs = dict()
+obs['agent_pos']=XXX
+obs['point_cloud']=XXX
+
+# get action or update obs
+action=dp3.get_action(obs) # or dp3.update_obs(obs)
+```
+
+4. DP
+```python
+# load package
+from IL_Baselines.Diffusion_Policy.DP import DP
+
+# load model
+dp = DP(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
+
+# input organization
+obs = dict()
+obs['agent_pos']=XXX
+obs['head_cam']=np.moveaxis(RGB_numpy, -1, 0) / 255.0
+
+# get action or update obs
+action=dp.get_action(obs) # or dp.update_obs(obs)
+```
+
+## 🔐 Task Extension
