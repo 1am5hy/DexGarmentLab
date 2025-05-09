@@ -414,7 +414,7 @@ if __name__=="__main__":
             pos = np.array([x,y,0.0])
             ori = np.array([0.0, 0.0, 0.0])
             Base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            assets_lists = os.path.join(Base_dir,"Model_HALO/GAM/checkpoints/Trousers/assets_list.txt")
+            assets_lists = os.path.join(Base_dir,"Model_HALO/GAM/checkpoints/Trousers/assets_training_list.txt")
             assets_list = []
             with open(assets_lists,"r",encoding='utf-8') as f:
                 for line in f:

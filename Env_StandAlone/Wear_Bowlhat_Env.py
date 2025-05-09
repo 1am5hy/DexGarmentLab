@@ -82,7 +82,7 @@ class WearBowlhat_Env(BaseEnv):
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
             usd_path="Assets/Garment/Hat/HA_Hat007/HA_Hat007_obj.usd" if usd_path is None else usd_path,
-            scale=np.array([0.0075,0.0075,0.0075]),
+            scale=np.array([0.009,0.0075,0.0075]),
             youngs_modulus=1e6,
             dynamic_friction=25.0
         )
@@ -397,7 +397,7 @@ if __name__=="__main__":
             pos = np.array([x,y,0.0])
             ori = np.array([90.0, 0.0, 0.0])
             Base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            assets_lists = os.path.join(Base_dir,"Model_HALO/GAM/checkpoints/Bowl_Hat/assets_list.txt")
+            assets_lists = os.path.join(Base_dir,"Model_HALO/GAM/checkpoints/Bowl_Hat/assets_training_list.txt")
             assets_list = []
             with open(assets_lists,"r",encoding='utf-8') as f:
                 for line in f:
