@@ -34,9 +34,9 @@
 
 - [x] *(2025.04.25)* DexGarmentLab **Automated Data Collection Pipeline** Release ! 
 
-- [x] *(2025.05.09)* DexGarmentLab **Baselines and Generalizable Policy**
+- [x] *(2025.05.09)* DexGarmentLab **Baselines and Generalizable Policy** Release !
 
-- [x] *(2025.05.09)* DexGarmentLab **Policy Validation Environment**
+- [x] *(2025.05.09)* DexGarmentLab **Policy Validation Environment** Release !
 
 - [ ] DexGarmentLab **Dataset of Garment Manipulation Tasks** Coming Soon ... 
 
