@@ -17,6 +17,8 @@
     <img src="https://img.shields.io/badge/Page-DexGarmentLab-red" alt="Project Page"/></a>
     <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
     <img src="https://img.shields.io/badge/Code-Github-blue" alt="Github Code"/></a>
+    <a href="https://huggingface.co/datasets/wayrise/DexGarmentLab/tree/main" target="_blank">
+    <img src="https://img.shields.io/badge/Data-HuggingFace-yellow" alt="HuggingFace Data"/></a>
 </div>
 
 <br>
@@ -38,7 +40,7 @@
 
 - [x] *(2025.05.09)* DexGarmentLab **Policy Validation Environment** Release !
 
-- [ ] DexGarmentLab **Dataset of Garment Manipulation Tasks** Coming Soon ... 
+- [x] *(2025.05.10)* DexGarmentLab **Dataset of Garment Manipulation Tasks** Release !
 
 
 
