@@ -176,7 +176,7 @@ GAM/
 ├── GAM_Encapsulation.py    # encapsulation of GAM
 ```
 
-For the detailed use of GAM, please refer to [GAM_Usage](https://github.com/wayrise/DexGarmentLab/blob/main/GAM_Usage.md). The files in **'Env_StandAlone/'** also provide example of how to use GAM.
+For the detailed use of GAM, please refer to [GAM_Usage.md](https://github.com/wayrise/DexGarmentLab/blob/main/GAM_Usage.md). The files in **'Env_StandAlone/'** also provide example of how to use GAM.
 
 ### SADP
 
@@ -339,9 +339,9 @@ Based on our simulation environment, there are lots of tasks that can be extende
 
 1. Define **task sequence** and organize **task assets** on your own.
 
-2. Define **demo grasp points** for GAM's reference. The usage of GAM can be found in [GAM_Usage](https://github.com/wayrise/DexGarmentLab/blob/main/GAM_Usage.md).
+2. Define **demo grasp points** for GAM's reference. The usage of GAM can be found in [GAM_Usage.md](https://github.com/wayrise/DexGarmentLab/blob/main/GAM_Usage.md).
 
-3. Define **demo hand grasp pose**. We provide **LeapMotion** Solution for generating hand grasp pose through teleoperation. The usage of LeapMotion Solution can be found in **'Assets/LeapMotion/LeapMotion_Guidance.md'**. The Guidance procedure has been demonstrated in ubuntu 20.04 and 22.04.
+3. Define **demo hand grasp pose**. We provide **LeapMotion** Solution for generating hand grasp pose through teleoperation. The usage of LeapMotion Solution can be found in [LeapMotion_Guidance.md](https://github.com/wayrise/DexGarmentLab/blob/main/LeapMotion_Guidance.md). The Guidance procedure has been demonstrated in ubuntu 20.04 and 22.04.
 
     After installing LeapMotion, you can run 'TeleOp_Env.py' to teleoperate ShadowHand and get hand grasp pose:
 
