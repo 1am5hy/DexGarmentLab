@@ -14,7 +14,7 @@
     <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
     <img src="https://img.shields.io/badge/Paper-arXiv-green" alt="Paper arXiv"></a>
     <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
-    <img src="https://img.shields.io/badge/Page-GarmentPile-red" alt="Project Page"/></a>
+    <img src="https://img.shields.io/badge/Page-DexGarmentLab-red" alt="Project Page"/></a>
     <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
     <img src="https://img.shields.io/badge/Code-Github-blue" alt="Github Code"/></a>
 </div>
@@ -130,7 +130,22 @@ bash Data_Collection.sh Hang_Coat 10
 # - data_collection_log.txt: recording data collection result,  corresponding assets and task configurations.
 ```
 
-You can also download our prepared data from [huggingface]() and put them into **Data** folder.
+You can also download our prepared data from [huggingface](https://huggingface.co/datasets/wayrise/DexGarmentLab/tree/main) and unzip them into **Data** folder. The file structure should be like:
+
+```
+Data/
+├── Hang_Coat/
+│   │   ├── final_state_pic
+│   │   ├── train_data
+│   │   ├── vedio
+│   │   └── data_collection_log.txt
+......
+├── Fling_Dress/
+│   │   ├── final_state_pic
+│   │   ├── train_data
+│   │   ├── vedio
+│   │   └── data_collection_log.txt
+```
 
 
 ## 🚀 Generalizable Policy
