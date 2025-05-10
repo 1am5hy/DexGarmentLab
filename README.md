@@ -66,7 +66,7 @@ git clone git@github.com:wayrise/DexGarmentLab.git
 
 DownLoad ***Garment*** directory (necessary assets used in this repo) from [Google Drive Link](https://drive.google.com/drive/folders/1EWH9zYQfBa96Z4JyimvUSBYOyW615JSg) which are provided by [GarmentLab](https://github.com/GarmentLab/GarmentLab), Thanks for GarmentLab's contribution!
 
-Download ***Robots*** and ***Scene*** directory from [Google Drive Link](https://drive.google.com/drive/folders/1tMm_z8O1z3M7jRzhEJQQ3xQsi89XiK3e?usp=sharing).
+Download ***Robots***, **LeapMotion**, ***Scene*** directory from [Google Drive Link](https://drive.google.com/drive/folders/1tMm_z8O1z3M7jRzhEJQQ3xQsi89XiK3e?usp=sharing).
 
 Put them all in the '**Assets**' Directory. 
 
@@ -403,3 +403,17 @@ action=dp.get_action(obs) # or dp.update_obs(obs)
 ```
 
 ## 🔐 Task Extension
+
+Based on our simulation environment, there are lots of tasks that can be extended. If you want to add a new task, you can follow the following steps:
+
+1. Define **task sequence** and organize **task assets** on your own.
+
+2. Define **demo grasp points** for GAM's reference. The usage of GAM can be found in [GAM_Usage](https://github.com/wayrise/DexGarmentLab/blob/main/GAM_Usage.md).
+
+3. Define **demo hand grasp pose**. We provide **LeapMotion** Solution for generating hand grasp pose through teleoperation. The usage of LeapMotion Solution can be found in **'Assets/LeapMotion/LeapMotion_Guidance.md'**. The Guidance procedure has been demonstrated in ubuntu 20.04 and 22.04.
+
+    After installing LeapMotion, you can run 'TeleOp_Env.py' to teleoperate ShadowHand and get hand grasp pose:
+
+    `isaac TeleOp_Env.py`
+
+>You only need to use right hand in real world for teleoperating both hands in simulation, because the joints of left hand and right hand are symmetric. The corresponding joint states will be printed in terminal. You can copy the joint states and paste it into **'Env_Config/Robot/BimanualDex_Ur10e.py'**.
