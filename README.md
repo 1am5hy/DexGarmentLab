@@ -327,80 +327,9 @@ bash Validation.sh Hang_Coat 100 100
 # Detailed parameters information can be found in the 'Validation.sh' file
 ```
 
-You can find how to load checkpoints and validate the policy through the code and we summarize core code below.
+You can find how to load checkpoints and validate the policy through the files in 'Env_Validation/' folder and we summarize core code in [Validation_Core.md](https://github.com/wayrise/DexGarmentLab/blob/main/Validation_Core.md).
 
-1. SADP
-```python
-# load package
-from Model_HALO.SADP.SADP import SADP
 
-# load model
-sadp = SADP(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
-
-# input organization
-obs = dict()
-obs['agent_pos']=XXX
-obs['environment_point_cloud']=XXX
-obs['garment_point_cloud']=XXX
-obs['object_point_cloud']=XXX
-obs['points_affordance_feature']=XXX
-
-# get action or update obs
-action=sadp.get_action(obs) # or sadp.update_obs(obs)
-```
-
-2. SADP_G
-```python
-# load package
-from Model_HALO.SADP_G.SADP_G import SADP_G
-
-# load model
-sadp_g = SADP_G(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
-
-# input organization
-obs = dict()
-obs['agent_pos']=XXX
-obs['environment_point_cloud']=XXX
-obs['garment_point_cloud']=XXX
-obs['points_affordance_feature']=XXX
-
-# get action or update obs
-action=sadp_g.get_action(obs) # or sadp_g.update_obs(obs)
-```
-
-3. DP3
-```python
-# load package
-from IL_Baselines.Diffusion_Policy_3D.DP3 import DP3
-
-# load model
-dp3 = DP3(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
-
-# input organization
-obs = dict()
-obs['agent_pos']=XXX
-obs['point_cloud']=XXX
-
-# get action or update obs
-action=dp3.get_action(obs) # or dp3.update_obs(obs)
-```
-
-4. DP
-```python
-# load package
-from IL_Baselines.Diffusion_Policy.DP import DP
-
-# load model
-dp = DP(task_name="Hang_Coat_stage_1", data_num=100, checkpoint_num=3000)
-
-# input organization
-obs = dict()
-obs['agent_pos']=XXX
-obs['head_cam']=np.moveaxis(RGB_numpy, -1, 0) / 255.0
-
-# get action or update obs
-action=dp.get_action(obs) # or dp.update_obs(obs)
-```
 
 ## 🔐 Task Extension
 
@@ -417,3 +346,5 @@ Based on our simulation environment, there are lots of tasks that can be extende
     `isaac TeleOp_Env.py`
 
 >You only need to use right hand in real world for teleoperating both hands in simulation, because the joints of left hand and right hand are symmetric. The corresponding joint states will be printed in terminal. You can copy the joint states and paste it into **'Env_Config/Robot/BimanualDex_Ur10e.py'**.
+
+4. Refer to python files in 'Env_StandAlone/' for the implementation of new task.
