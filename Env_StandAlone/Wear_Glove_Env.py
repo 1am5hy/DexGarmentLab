@@ -295,6 +295,14 @@ def WearGlove(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
 
     env.attach.detach(0)
     env.attach.detach(1)
+    
+    for i in range(100):
+        env.step()
+    
+    if record_vedio_flag:
+            if not os.path.exists("Data/Wear_Glove/vedio"):
+                os.makedirs("Data/Wear_Glove/vedio")
+            env.env_camera.create_mp4(get_unique_filename("Data/Wear_Glove/vedio/vedio", ".mp4"))
 
  
 
