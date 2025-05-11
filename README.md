@@ -13,7 +13,7 @@
 <div align="center">
     <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
     <img src="https://img.shields.io/badge/Paper-arXiv-green" alt="Paper arXiv"></a>
-    <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
+    <a href="https://wayrise.github.io/DexGarmentLab/" target="_blank">
     <img src="https://img.shields.io/badge/Page-DexGarmentLab-red" alt="Project Page"/></a>
     <a href="https://github.com/wayrise/DexGarmentLab" target="_blank">
     <img src="https://img.shields.io/badge/Code-Github-blue" alt="Github Code"/></a>
