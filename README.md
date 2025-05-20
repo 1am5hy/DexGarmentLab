@@ -357,12 +357,12 @@ If you find this repository useful in your research, please consider staring ðŸŒ
 
 ```
 @misc{wang2025dexgarmentlab,
-title={DexGarmentLab: Dexterous Garment Manipulation Environment with Generalizable Policy},
-author={Yuran Wang and Ruihai Wu and Yue Chen and Jiarui Wang and Jiaqi Liang and Ziyu Zhu and Haoran Geng and Jitendra Malik and Pieter Abbeel and Hao Dong},
-year={2025},
-eprint={2505.11032},
-archivePrefix={arXiv},
-primaryClass={cs.RO},
-url={https://arxiv.org/abs/2505.11032},
+    title={DexGarmentLab: Dexterous Garment Manipulation Environment with Generalizable Policy},
+    author={Yuran Wang and Ruihai Wu and Yue Chen and Jiarui Wang and Jiaqi Liang and Ziyu Zhu and Haoran Geng and Jitendra Malik and Pieter Abbeel and Hao Dong},
+    year={2025},
+    eprint={2505.11032},
+    archivePrefix={arXiv},
+    primaryClass={cs.RO},
+    url={https://arxiv.org/abs/2505.11032},
 }
 ```
