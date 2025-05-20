@@ -350,3 +350,19 @@ Based on our simulation environment, there are lots of tasks that can be extende
 >You only need to use right hand in real world for teleoperating both hands in simulation, because the joints of left hand and right hand are symmetric. The corresponding joint states will be printed in terminal. You can copy the joint states and paste it into **'Env_Config/Robot/BimanualDex_Ur10e.py'**.
 
 4. Refer to python files in 'Env_StandAlone/' for the implementation of new task.
+
+
+## Citation
+If you find this repository useful in your research, please consider staring 🌟 this repo and citing 📑 our paper:
+
+```
+@misc{wang2025dexgarmentlab,
+title={DexGarmentLab: Dexterous Garment Manipulation Environment with Generalizable Policy},
+author={Yuran Wang and Ruihai Wu and Yue Chen and Jiarui Wang and Jiaqi Liang and Ziyu Zhu and Haoran Geng and Jitendra Malik and Pieter Abbeel and Hao Dong},
+year={2025},
+eprint={2505.11032},
+archivePrefix={arXiv},
+primaryClass={cs.RO},
+url={https://arxiv.org/abs/2505.11032},
+}
+```
