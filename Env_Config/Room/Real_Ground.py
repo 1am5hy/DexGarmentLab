@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import os
 
 from isaacsim.core.prims import XFormPrim
 from isaacsim.core.utils.prims import is_prim_path_valid, get_prim_at_path, get_prim_children
@@ -22,7 +23,7 @@ class Real_Ground:
         restitution: float = 0.8,
         visual_material_usd=None,
     ):
-        usd_path = "Assets/Scene/default_ground.usd"
+        usd_path = os.getcwd() + "/Assets/Scene/Collected_default_environment/default_environment.usd"
         add_reference_to_stage(usd_path=usd_path, prim_path=prim_path)
         physics_material_path = find_unique_string_name(
             initial_name="/World/Physics_Materials/physics_material", is_unique_fn=lambda x: not is_prim_path_valid(x)
