@@ -66,9 +66,7 @@ git clone git@github.com:wayrise/DexGarmentLab.git
 
 **3. Project Assets Download**
 
-DownLoad ***Garment*** directory (necessary assets used in this repo) from [Google Drive Link](https://drive.google.com/drive/folders/1EWH9zYQfBa96Z4JyimvUSBYOyW615JSg) which are provided by [GarmentLab](https://github.com/GarmentLab/GarmentLab), Thanks for GarmentLab's contribution!
-
-Download ***Robots***, **LeapMotion**, ***Scene*** directory from [Google Drive Link](https://drive.google.com/drive/folders/1tMm_z8O1z3M7jRzhEJQQ3xQsi89XiK3e?usp=sharing).
+Download ***Robots***, **LeapMotion**, ***Scene***, ***Garment*** directory from [Google Drive Link](https://drive.google.com/drive/folders/1tMm_z8O1z3M7jRzhEJQQ3xQsi89XiK3e?usp=sharing).
 
 Put them all in the '**Assets**' Directory. 
 
