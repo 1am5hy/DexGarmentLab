@@ -80,7 +80,7 @@ class WearBaseballcap_Env(BaseEnv):
             self.world,
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
-            usd_path="Assets/Garment/Hat/HA_Hat016/HA_Hat016_obj.usd" if usd_path is None else usd_path,
+            usd_path=os.getcwd() + "/" + "Assets/Garment/Hat/HA_Hat016/HA_Hat016_obj.usd" if usd_path is None else usd_path,
             solver_position_iteration_count=8,
             simulation_hexahedral_resolution=16
         )
@@ -401,7 +401,7 @@ if __name__=="__main__":
                 for line in f:
                     clean_line = line.rstrip('\n')
                     assets_list.append(clean_line)
-            usd_path=np.random.choice(assets_list)
+            usd_path=os.getcwd() + "/" + np.random.choice(assets_list)
 
     WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_vedio_flag)
 

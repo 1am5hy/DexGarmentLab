@@ -68,7 +68,7 @@ class FlingDress_Env(BaseEnv):
             self.world, 
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0, 0, 0]),
-            usd_path="Assets/Garment/Dress/Short_LongSleeve/DSLS_Dress408/DSLS_Dress408_obj.usd" if usd_path is None else usd_path,
+            usd_path=os.getcwd() + "/" + "Assets/Garment/Dress/Short_LongSleeve/DSLS_Dress408/DSLS_Dress408_obj.usd" if usd_path is None else usd_path,
         )
         # Here are some example garments you can try:
         # "Assets/Garment/Dress/Long_LongSleeve/DLLS_Dress289/DLLS_Dress289_obj.usd"
@@ -397,7 +397,7 @@ if __name__=="__main__":
             for line in f:
                 clean_line = line.rstrip('\n')
                 assets_list.append(clean_line)
-        usd_path=np.random.choice(assets_list)
+        usd_path=os.getcwd() + "/" + np.random.choice(assets_list)
     
     FlingDress(pos, ori, usd_path, args.ground_material_usd, args.data_collection_flag, args.record_vedio_flag)
 

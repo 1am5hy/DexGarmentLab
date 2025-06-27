@@ -80,7 +80,7 @@ class WearGlove_Env(BaseEnv):
         
         self.garment=Deformable_Garment(
             self.world,
-            usd_path="Assets/Garment/Glove/GL_Gloves068/GL_Gloves068_obj.usd" if usd_path is None else usd_path,
+            usd_path=os.getcwd() + "/" + "Assets/Garment/Glove/GL_Gloves068/GL_Gloves068_obj.usd" if usd_path is None else usd_path,
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
             scale=np.array([0.01,0.01,0.01]),
