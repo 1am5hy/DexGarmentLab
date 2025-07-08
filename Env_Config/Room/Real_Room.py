@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from isaacsim.core.prims import XFormPrim
+from isaacsim.core.prims import XFormPrim, SingleXFormPrim
 from isaacsim.core.utils.prims import is_prim_path_valid
 from isaacsim.core.utils.string import find_unique_string_name
 from isaacsim.core.utils.rotations import euler_angles_to_quat
@@ -26,7 +26,7 @@ class Real_Room:
         # add room to stage
         add_reference_to_stage(self._room_usd_path, self._room_prim_path)
 
-        self._room_prim = XFormPrim(
+        self._room_prim = SingleXFormPrim(
             self._room_prim_path, 
             name="Room", 
             scale=self._room_scale, 

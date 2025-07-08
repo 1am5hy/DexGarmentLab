@@ -2,7 +2,6 @@ import numpy as np
 import torch
 import os
 
-from isaacsim.core.prims import XFormPrim
 from isaacsim.core.utils.prims import is_prim_path_valid, get_prim_at_path, get_prim_children
 from isaacsim.core.utils.string import find_unique_string_name
 from isaacsim.core.utils.rotations import euler_angles_to_quat
