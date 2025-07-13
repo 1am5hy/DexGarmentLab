@@ -136,7 +136,7 @@ class Recording_Camera:
             return point_cloud
         
 
-    def collect_rgb_graph_for_vedio(self):
+    def collect_rgb_graph_for_video(self):
         '''
         take RGB graph from recording_camera and collect them for gif generation.
         '''

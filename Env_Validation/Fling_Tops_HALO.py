@@ -48,7 +48,7 @@ class FlingTops_Env(BaseEnv):
         ori:np.ndarray=None, 
         usd_path:str=None, 
         ground_material_usd:str=None,
-        record_vedio_flag:bool=False, 
+        record_video_flag:bool=False, 
         training_data_num:int=100,
         stage_1_checkpoint_num:int=1500, 
         stage_2_checkpoint_num:int=1500, 
@@ -146,8 +146,8 @@ class FlingTops_Env(BaseEnv):
         self.judge_camera.initialize()
         
         # add thread and record gif Asynchronously(use to collect rgb data for generating gif)
-        if record_vedio_flag:
-            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_vedio)
+        if record_video_flag:
+            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_video)
             self.thread_record.daemon = True
                 
         # open hand to be initial state
@@ -166,11 +166,11 @@ class FlingTops_Env(BaseEnv):
         cprint("World Ready!", "green", "on_green")
     
      
-def FlingTops(pos, ori, usd_path, ground_material_usd, validation_flag, record_vedio_flag, training_data_num, stage_1_checkpoint_num, stage_2_checkpoint_num, stage_3_checkpoint_num):
+def FlingTops(pos, ori, usd_path, ground_material_usd, validation_flag, record_video_flag, training_data_num, stage_1_checkpoint_num, stage_2_checkpoint_num, stage_3_checkpoint_num):
 
-    env = FlingTops_Env(pos, ori, usd_path, ground_material_usd, record_vedio_flag, training_data_num, stage_1_checkpoint_num, stage_2_checkpoint_num, stage_3_checkpoint_num)
+    env = FlingTops_Env(pos, ori, usd_path, ground_material_usd, record_video_flag, training_data_num, stage_1_checkpoint_num, stage_2_checkpoint_num, stage_3_checkpoint_num)
 
-    if record_vedio_flag:
+    if record_video_flag:
         env.thread_record.start()  
     
     image_judge=env.judge_camera.get_rgb_graph()
@@ -360,10 +360,10 @@ def FlingTops(pos, ori, usd_path, ground_material_usd, validation_flag, record_v
         env.step()
     
     # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_vedio_flag:
-        if not os.path.exists("Data/Fling_Tops_Validation_HALO/vedio"):
-            os.makedirs("Data/Fling_Tops_Validation_HALO/vedio")
-        env.env_camera.create_mp4(get_unique_filename("Data/Fling_Tops_Validation_HALO/vedio/vedio", ".mp4"))
+    if record_video_flag:
+        if not os.path.exists("Data/Fling_Tops_Validation_HALO/video"):
+            os.makedirs("Data/Fling_Tops_Validation_HALO/video")
+        env.env_camera.create_mp4(get_unique_filename("Data/Fling_Tops_Validation_HALO/video/video", ".mp4"))
         
     success=True
     image_end = env.garment_camera.get_rgb_graph()
@@ -408,7 +408,7 @@ if __name__=="__main__":
                 assets_list.append(clean_line)
         usd_path=np.random.choice(assets_list)
     
-    FlingTops(pos, ori, usd_path, args.ground_material_usd, args.validation_flag, args.record_vedio_flag, args.training_data_num, args.stage_1_checkpoint_num, args.stage_2_checkpoint_num, args.stage_3_checkpoint_num)
+    FlingTops(pos, ori, usd_path, args.ground_material_usd, args.validation_flag, args.record_video_flag, args.training_data_num, args.stage_1_checkpoint_num, args.stage_2_checkpoint_num, args.stage_3_checkpoint_num)
 
     if args.validation_flag:
         simulation_app.close()

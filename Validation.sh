@@ -39,7 +39,7 @@ export ISAAC_PATH=$isaac_path
 # 创建目录和文件
 base_dir="Data/${task_name}_Validation_${type}"
 mkdir -p "${base_dir}/final_state_pic"
-mkdir -p "${base_dir}/vedio"
+mkdir -p "${base_dir}/video"
 touch "${base_dir}/validation_log.txt"
 
 # 获取当前数据数量
@@ -72,7 +72,7 @@ while [ "$current_num" -lt "$validation_num" ]; do
     $ISAAC_PATH Env_Validation/${task_name}_${type}.py \
         --env_random_flag True \
         --garment_random_flag True \
-        --record_vedio_flag True \
+        --record_video_flag True \
         --validation_flag True \
         --training_data_num "$training_data_num" \
         --stage_1_checkpoint_num "$stage_1_checkpoint_num" \

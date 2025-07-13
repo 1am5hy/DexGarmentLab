@@ -12,7 +12,7 @@ export ISAAC_PATH=$isaac_path
 base_dir="Data/${task_name}"
 mkdir -p "${base_dir}/final_state_pic"
 mkdir -p "${base_dir}/train_data"
-mkdir -p "${base_dir}/vedio"
+mkdir -p "${base_dir}/video"
 touch "${base_dir}/data_collection_log.txt"
 
 # get current collected data number
@@ -46,7 +46,7 @@ while [ "$current_num" -lt "$demo_num" ]; do
         --env_random_flag True \
         --garment_random_flag True \
         --data_collection_flag True \
-        --record_vedio_flag True \
+        --record_video_flag True \
         > /dev/null 2>&1
 
     # update collected data number

@@ -101,8 +101,8 @@ isaac Env_StandAlone/Hang_Coat_Env.py
 #   This flag only work when task belongs to Garment-Environment-Interaction Task
 # 2. --garment_random_flag: 
 #   True/False, Whether enable garment randomization (including position, orientation, shape)
-# 3. --record_vedio_flag: 
-#   True/False, Whether record whole-procedure vedio.
+# 3. --record_video_flag: 
+#   True/False, Whether record whole-procedure video.
 # 4. --data_collection_flag: 
 #   True/False, Whether collect data (for policy training).
 
@@ -126,7 +126,7 @@ bash Data_Collection.sh Hang_Coat 10
 # including:
 # - final_state_pic: .png file, picture of final garment state, used for manual verification of task success.
 # - train_data: .npz file, used for training data storage.
-# - vedio: .mp4 file, recording whole-procedure vedio.
+# - video: .mp4 file, recording whole-procedure video.
 # - data_collection_log.txt: recording data collection result,  corresponding assets and task configurations.
 ```
 
@@ -137,13 +137,13 @@ Data/
 ├── Hang_Coat/
 │   │   ├── final_state_pic
 │   │   ├── train_data
-│   │   ├── vedio
+│   │   ├── video
 │   │   └── data_collection_log.txt
 ......
 ├── Fling_Dress/
 │   │   ├── final_state_pic
 │   │   ├── train_data
-│   │   ├── vedio
+│   │   ├── video
 │   │   └── data_collection_log.txt
 ```
 
