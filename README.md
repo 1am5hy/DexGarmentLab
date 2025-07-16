@@ -66,9 +66,19 @@ git clone git@github.com:wayrise/DexGarmentLab.git
 
 **3. Project Assets Download**
 
-Download ***Robots***, **LeapMotion**, ***Scene***, ***Garment*** directory from [Google Drive Link](https://drive.google.com/drive/folders/1tMm_z8O1z3M7jRzhEJQQ3xQsi89XiK3e?usp=sharing).
+Download ***Robots***, **LeapMotion**, ***Scene***, ***Garment*** directory from [huggingface](https://huggingface.co/datasets/wayrise/DexGarmentLab/tree/main).
 
-Put them all in the '**Assets**' Directory. 
+We provide automated download script in the **Assets** directory.
+
+Following the instructions, you can download all the assets.
+
+```bash
+isaac Assets/assets_download.py
+unzip Robots.zip -d ./Assets
+unzip LeapMotion.zip -d ./Assets
+unzip Scene.zip -d ./Assets
+unzip Garment.zip -d ./Assets
+```
 
 **4. Additional Environment Dependencies for Project**
 
