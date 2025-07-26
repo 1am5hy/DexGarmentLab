@@ -73,7 +73,7 @@ class WearScarf_Env(BaseEnv):
             # pos=np.array([0.0, 0.25, 0.15]),
             pos=np.array([0.0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
-            usd_path=os.getcwd() + "/" + "Assets/Flatten_Scarf/flatten_scarf_0.4.usd" if usd_path is None else usd_path,
+            usd_path=os.getcwd() + "/" + "Assets/Flatten_Scarf/flatten_scarf_0.40.usd" if usd_path is None else usd_path,
             friction=1.0,
             particle_adhesion_scale=1.0,
             particle_friction_scale=1.0,
@@ -88,7 +88,7 @@ class WearScarf_Env(BaseEnv):
         self.env_dx = env_dx
         self.env_dy = env_dy
         self.human = Human(
-            path="Assets/Human/human_model.usd",
+            path=os.getcwd() + "/" +"Assets/Human/Collected_human_model/biped_demo_meters.usd",
             position=[0.0+env_dx, 0.9+env_dy, -0.7],
             orientation=[90.0, 0.0, 180.0]
         )

@@ -71,7 +71,7 @@ class WearBowlhat_Env(BaseEnv):
         self.env_dx = env_dx
         self.env_dy = env_dy
         self.human = Human(
-            path="Assets/Human/human_model.usd",
+            path=os.getcwd() + "/" +"Assets/Human/Collected_human_model/biped_demo_meters.usd",
             position=[0.0+env_dx,1.15+env_dy,0.0], 
             scale=np.array([0.6, 0.6, 0.6]),
         )

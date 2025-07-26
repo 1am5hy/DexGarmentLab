@@ -55,11 +55,11 @@ class RealScene_Load_Env(BaseEnv):
         # add ground
         self.ground = Real_Ground(
             self.scene, 
-            visual_material_usd = None
+            visual_material_usd = os.getcwd()+"/Assets/Material/Floor/Collected_WoodFloor004/WoodFloor004.usd" # os.getcwd()+"/Assets/Material/Floor/WoodFloor002/WoodFloor002.usd"
             # you can use materials in 'Assets/Material/Floor' to change the texture of ground.
         )
         
-        Real_Room(self.scene, usd_path=os.getcwd()+'/Assets/Scene/kitchen/kitchen_8/kitchen8.usd')
+        # Real_Room(self.scene, usd_path=os.getcwd()+'/Assets/Scene/kitchen/kitchen_8/kitchen8.usd')
         
         # ------------------------------------ #
         # --- Initialize World to be Ready --- #
