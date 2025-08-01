@@ -78,6 +78,7 @@ unzip Robots.zip -d ./Assets
 unzip LeapMotion.zip -d ./Assets
 unzip Scene.zip -d ./Assets
 unzip Garment.zip -d ./Assets
+unzip Human.zip -d ./Assets
 ```
 
 **4. Additional Environment Dependencies for Project**
