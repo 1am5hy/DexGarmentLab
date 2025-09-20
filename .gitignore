@@ -3,7 +3,8 @@ Assets/LeapMotion
 Assets/Robots
 Assets/Scene
 Assets/Human
-Data
+Data/*
+!Data/*.py
 Tool_Scripts
 Texture_Generate.sh
 pipeline.sh

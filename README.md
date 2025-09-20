@@ -5,7 +5,7 @@
 </h2>
 
 <div align="center" margin-bottom="6em">
-<b>Under Review</b>
+<b>NeurIPS 2025 Spotlight</b>
 </div>
 
 <br>
@@ -157,6 +157,14 @@ Data/
 │   │   ├── video
 │   │   └── data_collection_log.txt
 ```
+
+we provide data-download script for convenience:
+
+```bash
+isaac Data/data_download.py
+# after download, please unzip them into Data/
+```
+
 
 
 ## 🚀 Generalizable Policy
