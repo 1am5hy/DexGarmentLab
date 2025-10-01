@@ -49,7 +49,7 @@ class HangDress_Env(BaseEnv):
         env_dx:float=0.0,
         env_dy:float=0.0,
         ground_material_usd:str=None,
-        record_video_flag:bool=False, 
+        record_vedio_flag:bool=False, 
     ):
         # load BaseEnv
         super().__init__()
@@ -68,7 +68,7 @@ class HangDress_Env(BaseEnv):
             self.world, 
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
-            usd_path=os.getcwd() + "/" + "Assets/Garment/Dress/Short_LongSleeve/DSLS_Dress216/DSLS_Dress216_obj.usd" if usd_path is None else usd_path,
+            usd_path="Assets/Garment/Dress/Short_LongSleeve/DSLS_Dress216/DSLS_Dress216_obj.usd" if usd_path is None else usd_path,
         )
         # Here are some example garments you can try:
         # "Assets/Garment/Dress/Long_LongSleeve/DLLS_Dress206/DLLS_Dress206_obj.usd"
@@ -160,8 +160,8 @@ class HangDress_Env(BaseEnv):
         )
         
         # add thread and record gif Asynchronously(use to collect rgb data for generating gif)
-        if record_video_flag:
-            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_video)
+        if record_vedio_flag:
+            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_vedio)
             self.thread_record.daemon = True
             
         # move garment to the target position
@@ -217,9 +217,9 @@ class HangDress_Env(BaseEnv):
 
         
 
-def HangDress(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_video_flag):
+def HangDress(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_vedio_flag):
     
-    env = HangDress_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, record_video_flag)
+    env = HangDress_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, record_vedio_flag)
     
     env.garment.particle_material.set_gravity_scale(0.7)
     
@@ -265,7 +265,7 @@ def HangDress(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     for i in range(50):
         env.step()
         
-    if record_video_flag:
+    if record_vedio_flag:
         env.thread_record.start()
 
     # get manipulation points from GAM Model
@@ -366,10 +366,10 @@ def HangDress(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     cprint(f"final result: {success}", color="green", on_color="on_green")
     
     # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_video_flag and success:
-        if not os.path.exists("Data/Hang_Dress/video"):
-            os.makedirs("Data/Hang_Dress/video")
-        env.env_camera.create_mp4(get_unique_filename("Data/Hang_Dress/video/video", ".mp4"))
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Hang_Dress/vedio"):
+            os.makedirs("Data/Hang_Dress/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Hang_Dress/vedio/vedio", ".mp4"))
 
     if data_collection_flag:
         # write into .log file
@@ -413,9 +413,9 @@ if __name__=="__main__":
                 for line in f:
                     clean_line = line.rstrip('\n')
                     assets_list.append(clean_line)
-            usd_path=os.getcwd() + "/" + np.random.choice(assets_list)
+            usd_path=np.random.choice(assets_list)
 
-    HangDress(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_video_flag)
+    HangDress(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_vedio_flag)
 
     if args.data_collection_flag:
         simulation_app.close()

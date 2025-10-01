@@ -54,7 +54,7 @@ class WearGlove_Env(BaseEnv):
         env_dy:float=0.0,
         ground_material_usd:str=None,
         data_collection_flag:bool=False,
-        record_video_flag:bool=False, 
+        record_vedio_flag:bool=False, 
     ):
         # load BaseEnv
         super().__init__()
@@ -80,7 +80,7 @@ class WearGlove_Env(BaseEnv):
         
         self.garment=Deformable_Garment(
             self.world,
-            usd_path=os.getcwd() + "/" + "Assets/Garment/Glove/GL_Gloves068/GL_Gloves068_obj.usd" if usd_path is None else usd_path,
+            usd_path="Assets/Garment/Glove/GL_Gloves068/GL_Gloves068_obj.usd" if usd_path is None else usd_path,
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
             scale=np.array([0.01,0.01,0.01]),
@@ -169,8 +169,8 @@ class WearGlove_Env(BaseEnv):
         )
         
         # add thread and record gif Asynchronously(use to collect rgb data for generating gif)
-        if record_video_flag:
-            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_video)
+        if record_vedio_flag:
+            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_vedio)
             self.thread_record.daemon = True
 
         # step world to make it ready
@@ -188,9 +188,9 @@ class WearGlove_Env(BaseEnv):
         cprint("World Ready!", "green", "on_green")
         
 
-def WearGlove(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_video_flag):
+def WearGlove(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_vedio_flag):
 
-    env = WearGlove_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_video_flag)
+    env = WearGlove_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_vedio_flag)
         
     # hide prim to get garment point cloud
     set_prim_visible_group(
@@ -213,7 +213,7 @@ def WearGlove(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     for i in range(50):
         env.step()
         
-    if record_video_flag:
+    if record_vedio_flag:
         env.thread_record.start()
         
     # pcd_rotate = rotate_point_cloud(env.garment_pcd, euler_angles=np.array([0, 0, 180]), center_point=env.garment.get_garment_center_pos())     
@@ -299,10 +299,10 @@ def WearGlove(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_coll
     for i in range(100):
         env.step()
     
-    if record_video_flag:
-            if not os.path.exists("Data/Wear_Glove/video"):
-                os.makedirs("Data/Wear_Glove/video")
-            env.env_camera.create_mp4(get_unique_filename("Data/Wear_Glove/video/video", ".mp4"))
+    if record_vedio_flag:
+            if not os.path.exists("Data/Wear_Glove/vedio"):
+                os.makedirs("Data/Wear_Glove/vedio")
+            env.env_camera.create_mp4(get_unique_filename("Data/Wear_Glove/vedio/vedio", ".mp4"))
 
  
 
@@ -317,7 +317,7 @@ if __name__=="__main__":
     env_dx = 0.0
     env_dy = 0.0
 
-    WearGlove(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_video_flag)
+    WearGlove(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_vedio_flag)
 
     if args.data_collection_flag:
         simulation_app.close()

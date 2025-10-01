@@ -46,7 +46,7 @@ class FoldTops_Env(BaseEnv):
         ori:np.ndarray=None, 
         usd_path:str=None, 
         ground_material_usd:str=None,
-        record_video_flag:bool=False, 
+        record_vedio_flag:bool=False, 
     ):
         # load BaseEnv
         super().__init__()
@@ -65,7 +65,7 @@ class FoldTops_Env(BaseEnv):
             self.world, 
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
-            usd_path=os.getcwd() + "/" + "Assets/Garment/Tops/Collar_Lsleeve_FrontClose/TCLC_018/TCLC_018_obj.usd" if usd_path is None else usd_path,
+            usd_path="Assets/Garment/Tops/Collar_Lsleeve_FrontClose/TCLC_018/TCLC_018_obj.usd" if usd_path is None else usd_path,
             contact_offset=0.012,             
             rest_offset=0.010,                
             particle_contact_offset=0.012,    
@@ -130,8 +130,8 @@ class FoldTops_Env(BaseEnv):
         self.env_camera.initialize(depth_enable=True)
         
         # add thread and record gif Asynchronously(use to collect rgb data for generating gif)
-        if record_video_flag:
-            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_video)
+        if record_vedio_flag:
+            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_vedio)
             self.thread_record.daemon = True
         
         # open hand to be initial state
@@ -177,11 +177,11 @@ class FoldTops_Env(BaseEnv):
         self.step_num += 1
 
 
-def FoldTops(pos, ori, usd_path, ground_material_usd, data_collection_flag, record_video_flag):
+def FoldTops(pos, ori, usd_path, ground_material_usd, data_collection_flag, record_vedio_flag):
     
-    env = FoldTops_Env(pos, ori, usd_path, ground_material_usd, record_video_flag)
+    env = FoldTops_Env(pos, ori, usd_path, ground_material_usd, record_vedio_flag)
     
-    if record_video_flag:
+    if record_vedio_flag:
         env.thread_record.start()
     
     # hide prim to get garment point cloud
@@ -363,10 +363,10 @@ def FoldTops(pos, ori, usd_path, ground_material_usd, data_collection_flag, reco
     cprint(f"final result: {success}", color="green", on_color="on_green")
     
     # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_video_flag and success:
-        if not os.path.exists("Data/Fold_Tops/video"):
-            os.makedirs("Data/Fold_Tops/video")
-        env.env_camera.create_mp4(get_unique_filename("Data/Fold_Tops/video/video", ".mp4"))
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Fold_Tops/vedio"):
+            os.makedirs("Data/Fold_Tops/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Fold_Tops/vedio/vedio", ".mp4"))
 
     if data_collection_flag:
         # write into .log file
@@ -401,9 +401,9 @@ if __name__=="__main__":
             for line in f:
                 clean_line = line.rstrip('\n')
                 assets_list.append(clean_line)
-        usd_path=os.getcwd() + "/" + np.random.choice(assets_list)
+        usd_path=np.random.choice(assets_list)
     
-    FoldTops(pos, ori, usd_path, args.ground_material_usd, args.data_collection_flag, args.record_video_flag)
+    FoldTops(pos, ori, usd_path, args.ground_material_usd, args.data_collection_flag, args.record_vedio_flag)
 
     if args.data_collection_flag:
         simulation_app.close()

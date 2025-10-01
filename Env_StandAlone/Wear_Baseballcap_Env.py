@@ -52,7 +52,7 @@ class WearBaseballcap_Env(BaseEnv):
         env_dx:float=0.0,
         env_dy:float=0.0,
         ground_material_usd:str=None,
-        record_video_flag:bool=False, 
+        record_vedio_flag:bool=False, 
     ):
         # load BaseEnv
         super().__init__()
@@ -70,7 +70,7 @@ class WearBaseballcap_Env(BaseEnv):
         self.env_dx = env_dx
         self.env_dy = env_dy
         self.human = Human(
-            path=os.getcwd() + "/" +"Assets/Human/Collected_human_model/biped_demo_meters.usd",
+            path="Assets/Human/human_model.usd",
             position=[0.0+env_dx,1.15+env_dy,0.0], 
             scale=np.array([0.6, 0.6, 0.6]),
         )
@@ -80,7 +80,7 @@ class WearBaseballcap_Env(BaseEnv):
             self.world,
             pos=np.array([0, 3.0, 0.6]),
             ori=np.array([0.0, 0.0, 0.0]),
-            usd_path=os.getcwd() + "/" + "Assets/Garment/Hat/HA_Hat016/HA_Hat016_obj.usd" if usd_path is None else usd_path,
+            usd_path="Assets/Garment/Hat/HA_Hat016/HA_Hat016_obj.usd" if usd_path is None else usd_path,
             solver_position_iteration_count=8,
             simulation_hexahedral_resolution=16
         )
@@ -169,8 +169,8 @@ class WearBaseballcap_Env(BaseEnv):
         )
         
         # add thread and record gif Asynchronously(use to collect rgb data for generating gif)
-        if record_video_flag:
-            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_video)
+        if record_vedio_flag:
+            self.thread_record = threading.Thread(target=self.env_camera.collect_rgb_graph_for_vedio)
             self.thread_record.daemon = True
 
         # step world to make it ready
@@ -217,9 +217,9 @@ class WearBaseballcap_Env(BaseEnv):
         self.step_num += 1
 
         
-def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_video_flag):
+def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, data_collection_flag, record_vedio_flag):
     
-    env = WearBaseballcap_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, record_video_flag)
+    env = WearBaseballcap_Env(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, record_vedio_flag)
     
     # hide prim to get object point cloud
     set_prim_visible_group(
@@ -267,7 +267,7 @@ def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, dat
     for i in range(50):
         env.step()
         
-    if record_video_flag:
+    if record_vedio_flag:
         env.thread_record.start()
 
     # get manipulation points from UniGarmentManip Model
@@ -354,10 +354,10 @@ def WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, ground_material_usd, dat
     cprint(f"final result: {success}", color="green", on_color="on_green")
     
     # if you wanna create gif, use this code. Need Cooperation with thread.
-    if record_video_flag and success:
-        if not os.path.exists("Data/Wear_Baseballcap/video"):
-            os.makedirs("Data/Wear_Baseballcap/video")
-        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Baseballcap/video/video", ".mp4"))
+    if record_vedio_flag and success:
+        if not os.path.exists("Data/Wear_Baseballcap/vedio"):
+            os.makedirs("Data/Wear_Baseballcap/vedio")
+        env.env_camera.create_mp4(get_unique_filename("Data/Wear_Baseballcap/vedio/vedio", ".mp4"))
 
 
     if data_collection_flag:
@@ -401,9 +401,9 @@ if __name__=="__main__":
                 for line in f:
                     clean_line = line.rstrip('\n')
                     assets_list.append(clean_line)
-            usd_path=os.getcwd() + "/" + np.random.choice(assets_list)
+            usd_path=np.random.choice(assets_list)
 
-    WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_video_flag)
+    WearBaseballcap(pos, ori, usd_path, env_dx, env_dy, args.ground_material_usd, args.data_collection_flag, args.record_vedio_flag)
 
     if args.data_collection_flag:
         simulation_app.close()
